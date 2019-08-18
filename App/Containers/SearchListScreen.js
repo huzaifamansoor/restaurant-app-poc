@@ -54,7 +54,7 @@ class SearchListScreen extends Component {
     if(text.length > 2){
       tempurl = `${searchUrl}${this.state.collectionId}&q=${text}`;
     }
-    elsev
+    else
     {
       tempurl = `${searchUrl}${this.state.collectionId}`;
     }
