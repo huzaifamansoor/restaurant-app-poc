@@ -6,6 +6,8 @@ import RootContainer from './RootContainer'
 import { createStore, applyMiddleware } from '../redux';
 import rootSaga from '../sagas';
 import createSagaMiddleware from 'redux-saga';
+import reducer from '../reducers';
+import { logger } from 'redux-logger';
 
 // create our store
 // const store = createStore()
