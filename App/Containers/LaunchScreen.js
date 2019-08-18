@@ -61,6 +61,7 @@ export default class LaunchScreen extends Component {
         "user-key": ZomatoAPIKey
       }}).then(
         (res) => {
+          console.log(res);
           this.setState({collections :res.data.collections})
           this.setState({loaded: true})
         }
@@ -104,6 +105,7 @@ export default class LaunchScreen extends Component {
 
   changeCity(text){
     this.setState({defaultCity:text});
+    this.setState({loaded: false})
     this.getCollectionForCity();
   }
 
