@@ -77,6 +77,7 @@ class SearchListScreen extends Component {
     );
   }
   renderSearchResultRow(item){
+    const resId = item.restaurant.id;
     const bgImage = item.restaurant.featured_image;
     const resturantName = item.restaurant.name;
     const cost = item.restaurant.average_cost_for_two;
@@ -84,7 +85,13 @@ class SearchListScreen extends Component {
 
     console.log(bgImage + ' ' + resturantName + cost+' ' +cost +' ' +rating);
     return(
-    <TouchableHighlight>
+    <TouchableHighlight
+      onPress={ () =>
+        this.props.navigation.navigate('RestaurantdetailScreen',
+        {
+          resId : resId,
+        })}
+    >
       <View style = {{flexDirection:'row', padding: 15}}>
         
         <View style = {{flex : 1}}>
