@@ -32,12 +32,11 @@ export default class HeaderBar extends Component {
         <Body>
           <Title>Resturant App</Title>
         </Body>
-        <Right>
+        {/* <Right>
           <Button transparent onPress={() => this.props.navigation.goBack()}>
-          {/* <Button transparent onPress={() => this.setState({modalVisible: true})}> */}
             <Icon name="menu" />
           </Button>
-        </Right>
+        </Right> */}
       </Header>      
     );
   }

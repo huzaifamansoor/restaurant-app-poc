@@ -9,12 +9,15 @@ const PrimaryNav = createStackNavigator({
   SearchListScreen: { screen: SearchListScreen },
   LaunchScreen: { screen: LaunchScreen }
 }, {
-  // Default config for all screens
-  headerMode: 'none',
   initialRouteName: 'LaunchScreen',
-  navigationOptions: {
-    headerStyle: styles.header
-  }
-})
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: '#255ca8',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+}})
 
 export default createAppContainer(PrimaryNav)

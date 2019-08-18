@@ -29,9 +29,14 @@ import {
 
 import {ZomatoAPIKey} from '../Helper/ApiKeys';
 import {searchUrl} from '../Helper/URLs';
+//cityCodes
+import {cityCode_NewYork, cityCode_NewJersey} from '../Helper/CityCodes';
 
 class SearchListScreen extends Component {
-
+  static navigationOptions = {
+    title: 'Search Restaurant',
+    /* No more header config here! */
+  };
   constructor(props){
     super(props);
     const { navigation } = this.props;
@@ -40,6 +45,7 @@ class SearchListScreen extends Component {
       collectionId : navigation.getParam('collectionId', '1'),
       searchResult : [],
       searchkeyword : '',
+      defaultCity : navigation.getParam('defaultCity', '1'),
       loaded: false
     }
   }
@@ -79,37 +85,53 @@ class SearchListScreen extends Component {
     console.log(bgImage + ' ' + resturantName + cost+' ' +cost +' ' +rating);
     return(
     <TouchableHighlight>
-      <View>
-      <View style ={{flex : 1, alignItems: 'center'}}>
-        <Text>{resturantName}</Text>
-      </View>
-      <View style = {{flexDirection:'row'}}>
+      <View style = {{flexDirection:'row', padding: 15}}>
+        
         <View style = {{flex : 1}}>
-          <Image source={{uri : bgImage}} style = {{ width: 100, height: 100}} resizeMethod='scale'/>
+          <Image source={{uri : bgImage}} style = {{ borderRadius: 10,width: 100, height: 100}} resizeMethod='scale'/>
         </View>
         
         <View style ={{flex:2}}>
-          <Text>Rating: {rating}</Text>
-          <Text>Cost: {cost}</Text>
+          <Text style={{fontSize: 18,fontWeight: 'bold'}}>{resturantName}</Text>
+          <Text style={{fontSize: 14,fontWeight: 'bold'}}>Rating: {rating}</Text>
+          <Text style={{fontSize: 14,fontWeight: 'bold'}}>Cost: {cost}</Text>
         </View>
-      </View>
       </View>
     </TouchableHighlight>
     );
   }
 
-  onChangeText(text){
-
+  changeCity(text){
+    this.setState({defaultCity:text});
   }
+
   render () {
     
     var searchList;
     if(this.state.loaded){
       searchList = (
       <View>
-          <Form>
+          <Form style = {{ padding: 15}}>
+          {/* <Item picker>
+              <Picker
+                mode="dropdown"
+                iosIcon={<Icon name="ios-arrow-down" />}
+                style={{ width: undefined }}
+                placeholder="Select your city"
+                placeholderStyle={{ color: "#bfc6ea" }}
+                placeholderIconColor="#007aff"
+                selectedValue= {this.state.defaultCity}
+                onValueChange={(text) => {
+                  this.changeCity(text);
+                }}
+              >
+                <Item label="New York" value={cityCode_NewYork} />
+                <Item label="New Jersey" value={cityCode_NewJersey} />
+              </Picker>
+            </Item> */}
+
           <Item rounded>
-            <Input placeholder="Search" 
+            <Input placeholder="Search Restaurant" 
             onChangeText = {text => {
               this.getSearchResult(text);
             }}
@@ -128,14 +150,14 @@ class SearchListScreen extends Component {
     }
     else{
       searchList = (
-        <View >
-          <Text>Retrieving ...</Text>
-        </View>
+      <View style = {{flex: 1, padding: 15, alignItems: 'center'}}>
+        <Text >Retrieving ...</Text>
+      </View>
       )
     }
     return (
       <Container style={Headerstyles.container}>
-        <HeaderBar></HeaderBar>
+        {/* <HeaderBar></HeaderBar> */}
          
         <Content padder>
         {searchList}

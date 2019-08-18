@@ -36,7 +36,10 @@ import {collectionUrl, categoriesUrl} from '../Helper/URLs';
 import {ZomatoAPIKey} from '../Helper/ApiKeys';
 
 export default class LaunchScreen extends Component {
-  
+  static navigationOptions = {
+    title: 'Home',
+    /* No more header config here! */
+  };
   constructor(props){
       super(props);
 
@@ -73,10 +76,14 @@ export default class LaunchScreen extends Component {
     return(
       <TouchableHighlight
         onPress={ () =>
-          this.props.navigation.navigate('SearchListScreen',{collectionId : id})}
+          this.props.navigation.navigate('SearchListScreen',
+          {
+            collectionId : id,
+            defaultCity : this.state.defaultCity
+          })}
       >
-      <View key= {id} style = {{flex: 1, padding: 10, alignItems: 'center'}}>
-        <Image source={{uri : bgImage}} style = {{ width: '100%', height: 200}} blurRadius={2} opacity={8} resizeMethod='scale'/>
+      <View key= {id} style = {{flex: 1, padding: 15, alignItems: 'center'}}>
+        <Image source={{uri : bgImage}} style = {{ borderRadius: 10,width: '100%', height: 200}} blurRadius={2.5} opacity={7} resizeMethod='scale'/>
 
         <View style = {{
           position: 'absolute',
@@ -87,7 +94,7 @@ export default class LaunchScreen extends Component {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Text style={{fontSize: 30, color: '#0f120b'}}>{collectionTitle}</Text>
+        <Text style={{color: 'white',fontSize: 30,fontWeight: 'bold'}}>{collectionTitle}</Text>
         </View>
       </View>
       </TouchableHighlight>
@@ -114,23 +121,23 @@ export default class LaunchScreen extends Component {
     }
     else{
       collectionList = (
-        <View >
-          <Text>Retrieving ...</Text>
+        <View style = {{flex: 1, padding: 15, alignItems: 'center'}}>
+          <Text >Retrieving ...</Text>
         </View>
       )
     } 
 
     return (
       <Container style={Headerstyles.container}>
-        <HeaderBar></HeaderBar>
+        {/* <HeaderBar ></HeaderBar> */}
 
         <Content padder>
-        <Form>
+        <Form style={{ padding: 15}}>
             <Item picker>
               <Picker
                 mode="dropdown"
                 iosIcon={<Icon name="ios-arrow-down" />}
-                style={{ width: undefined }}
+                style={{ width: undefined}}
                 placeholder="Select your city"
                 placeholderStyle={{ color: "#bfc6ea" }}
                 placeholderIconColor="#007aff"
