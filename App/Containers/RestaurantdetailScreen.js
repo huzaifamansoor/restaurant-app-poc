@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 // Styles
 import styles from './Styles/RestaurantdetailScreenStyle';
 import { ScrollView, KeyboardAvoidingView,View,Linking , FlatList,Image,TouchableHighlight } from 'react-native'
+import Headerstyles from '../Components/Styles/HeaderBarStyle';
 import {
   Container,
   Header,
@@ -66,7 +67,7 @@ class RestaurantdetailScreen extends Component {
         this.setState({resEventUrl: res.data.events_url});
         this.setState({resImageUrl: res.data.thumb});
         this.setState({resPhotosUrl: res.data.photos_url});
-        loaded = true;
+        this.setState({loaded:true});
       });
   }
 
@@ -86,8 +87,11 @@ class RestaurantdetailScreen extends Component {
   
 
   render () {
-    return (
-      <ScrollView>
+    var detailView ;
+
+    if(this.state.loaded){
+      detailView = (
+        <ScrollView>
       <View>
         <View style = {{justifyContent: "center", alignItems: "center", padding: 15}}>
           <Text style= {{fontWeight:'bold', fontSize:25}}>{this.state.resName}</Text>
@@ -130,10 +134,26 @@ class RestaurantdetailScreen extends Component {
               />   
           </View>
         </View>        
-      </View>
-      
-        
+      </View>        
       </ScrollView>
+      );
+    }
+
+    else{
+      detailView = (
+        <View style = {{flex: 1, padding: 15, alignItems: 'center'}}>
+          <Text >Retrieving ...</Text>
+        </View>
+      );
+    }
+    return (
+      <Container style={Headerstyles.container}>
+        {/* <HeaderBar></HeaderBar> */}
+
+        <Content padder>
+          {detailView}
+        </Content>
+      </Container>
     )
   }
 }
