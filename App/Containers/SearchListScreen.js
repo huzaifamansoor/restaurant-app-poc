@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, KeyboardAvoidingView,View, FlatList,Image,TouchableHighlight } from 'react-native'
+import { ScrollView, KeyboardAvoidingView, View, FlatList, Image, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux';
 import axios from 'axios';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
@@ -27,99 +27,103 @@ import {
   Text
 } from "native-base";
 
-import {ZomatoAPIKey} from '../Helper/ApiKeys';
-import {searchUrl} from '../Helper/URLs';
+import { ZomatoAPIKey } from '../Helper/ApiKeys';
+import { searchUrl } from '../Helper/URLs';
 //cityCodes
-import {cityCode_NewYork, cityCode_NewJersey} from '../Helper/CityCodes';
+import { cityCode_NewYork, cityCode_NewJersey } from '../Helper/CityCodes';
 
 class SearchListScreen extends Component {
   static navigationOptions = {
     title: 'Search Restaurant',
     /* No more header config here! */
   };
-  constructor(props){
+  constructor(props) {
     super(props);
     const { navigation } = this.props;
 
     this.state = {
-      collectionId : navigation.getParam('collectionId', '1'),
-      searchResult : [],
-      searchkeyword : '',
-      defaultCity : navigation.getParam('defaultCity', '1'),
+      collectionId: navigation.getParam('collectionId', '1'),
+      searchResult: [],
+      searchkeyword: '',
+      defaultCity: navigation.getParam('defaultCity', '1'),
       loaded: false
     }
   }
 
-  componentWillMount(){    
+  componentWillMount() {
     this.getSearchResult('');
   }
 
-  getSearchResult(text){
+  getSearchResult(text) {
     var tempurl = '';
 
-    if(text.length > 2){
+    if (text.length > 2) {
       tempurl = `${searchUrl}${this.state.collectionId}&q=${text}`;
     }
-    else
-    {
+    else {
       tempurl = `${searchUrl}${this.state.collectionId}`;
     }
 
     axios.get(tempurl, {
       headers: {
-      "user-key": ZomatoAPIKey
-    }}).then(
+        "user-key": ZomatoAPIKey
+      }
+    }).then(
       (res) => {
-        this.setState({searchResult: res.data.restaurants,
-        loaded: true
+        console.log(res);
+        this.setState({
+          searchResult: res.data.restaurants,
+          loaded: true
         });
       }
     );
   }
-  renderSearchResultRow(item){
-    const resId = item.restaurant.id;
+  renderSearchResultRow(item) {
     const bgImage = item.restaurant.featured_image;
     const resturantName = item.restaurant.name;
     const cost = item.restaurant.average_cost_for_two;
     const rating = item.restaurant.user_rating.aggregate_rating;
+    const cuisines = item.restaurant.cuisines;
+    const location = item.restaurant.location.locality_verbose;
 
-    console.log(bgImage + ' ' + resturantName + cost+' ' +cost +' ' +rating);
-    return(
-    <TouchableHighlight
-      onPress={ () =>
-        this.props.navigation.navigate('RestaurantdetailScreen',
-        {
-          resId : resId,
-        })}
-    >
-      <View style = {{flexDirection:'row', padding: 15}}>
-        
-        <View style = {{flex : 1}}>
-          <Image source={{uri : bgImage}} style = {{ borderRadius: 10,width: 100, height: 100}} resizeMethod='scale'/>
+    console.log(bgImage + ' ' + resturantName + cost + ' ' + cost + ' ' + rating);
+    return (
+      <TouchableHighlight>
+        <View style={{ flexDirection: 'row', padding: 15 }}>
+
+      
+          <View style={{ flex: 1 }}>
+            <Image source={{ uri: bgImage }} style={{ borderRadius: 10, width: 100, height: 100 }} resizeMethod='scale' />
+
+          </View>
+
+
+          <View style={{ flex: 2 }}>
+            <Text style={{ fontSize: 17, fontWeight: 'bold', paddingBottom: 5 }}>{resturantName}</Text>
+            <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Rating: {rating}</Text>
+            <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Cost: {cost}</Text>
+            <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Cuisines: {cuisines}</Text>
+          </View>
+
         </View>
+
         
-        <View style ={{flex:2}}>
-          <Text style={{fontSize: 18,fontWeight: 'bold'}}>{resturantName}</Text>
-          <Text style={{fontSize: 14,fontWeight: 'bold'}}>Rating: {rating}</Text>
-          <Text style={{fontSize: 14,fontWeight: 'bold'}}>Cost: {cost}</Text>
-        </View>
-      </View>
-    </TouchableHighlight>
+      </TouchableHighlight>
     );
   }
 
-  changeCity(text){
-    this.setState({defaultCity:text});
+  changeCity(text) {
+    this.setState({ defaultCity: text });
   }
 
-  render () {
-    
+  render() {
+
     var searchList;
-    if(this.state.loaded){
+    if (this.state.loaded) {
       searchList = (
-      <View>
-          <Form style = {{ padding: 15}}>
-          {/* <Item picker>
+        <View>
+          <Form style={{ padding: 15 }}>
+            {/* <Item picker>
               <Picker
                 mode="dropdown"
                 iosIcon={<Icon name="ios-arrow-down" />}
@@ -137,37 +141,37 @@ class SearchListScreen extends Component {
               </Picker>
             </Item> */}
 
-          <Item rounded>
-            <Input placeholder="Search Restaurant" 
-            onChangeText = {text => {
-              this.getSearchResult(text);
-            }}
-            />
-          </Item>
-        </Form>
+            <Item rounded>
+              <Input placeholder="Search Restaurant"
+                onChangeText={text => {
+                  this.getSearchResult(text);
+                }}
+              />
+            </Item>
+          </Form>
 
-        <View >
+          <View >
             <FlatList
-              data = {this.state.searchResult}
-              renderItem = {({item}) => this.renderSearchResultRow(item)}
-            />            
+              data={this.state.searchResult}
+              renderItem={({ item }) => this.renderSearchResultRow(item)}
+            />
+          </View>
         </View>
-      </View>     
-       );
+      );
     }
-    else{
+    else {
       searchList = (
-      <View style = {{flex: 1, padding: 15, alignItems: 'center'}}>
-        <Text >Retrieving ...</Text>
-      </View>
+        <View style={{ flex: 1, padding: 15, alignItems: 'center' }}>
+          <Text >Retrieving ...</Text>
+        </View>
       )
     }
     return (
       <Container style={Headerstyles.container}>
         {/* <HeaderBar></HeaderBar> */}
-         
+
         <Content padder>
-        {searchList}
+          {searchList}
         </Content>
       </Container>
 
