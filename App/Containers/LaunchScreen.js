@@ -1,12 +1,29 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, Image, View ,ImageBackground, FlatList} from 'react-native';
+// import { ScrollView, Text, Image, View ,ImageBackground, FlatList} from 'react-native';
 import DevscreensButton from '../../ignite/DevScreens/DevscreensButton.js'
 
 import { Images } from '../Themes'
 import axios from 'axios';
 // Styles
-import styles from './Styles/LaunchScreenStyles'
-import DeviceInfoScreen from '../../ignite/DevScreens/DeviceInfoScreen.js';
+import styles from './Styles/LaunchScreenStyles';
+import Headerstyles from '../Components/Styles/HeaderBarStyle';
+
+//import Component
+import HeaderBar from '../Components/HeaderBar';
+
+import {
+  Container,
+  Header,
+  Title,
+  Content,
+  Button,
+  Icon,
+  Left,
+  Right,
+  Body,
+  Text
+} from "native-base";
+import {View, FlatList,Image} from 'react-native';
 
 const Breakfast = require('.././Images/categories/Breakfast.jpg');
 const Cafes = require('.././Images/categories/Cafes.jpg');
@@ -23,73 +40,49 @@ const Takeaway = require('.././Images/categories/Takeaway.jpg');
 const Dinner = require('.././Images/categories/Dinner.jpg');
 
 
+//cityCodes
+import {cityCode_NewYork, cityCode_NewJersey} from '../Helper/CityCodes';
+import {collectionUrl, categoriesUrl} from '../Helper/URLs';
+import {ZomatoAPIKey} from '../Helper/ApiKeys';
+
 export default class LaunchScreen extends Component {
   
   constructor(props){
       super(props);
 
     this.state = {
-      categories : [],
+      collections : [],
       loaded : false
     }
   }
-  
-  getCategory(){
-    axios.get('https://developers.zomato.com/api/v2.1/categories', {
-      headers: {
-        "user-key": "b5ac3100e25f801221a8795de6fde1a3"
-      }}).then(
-        (res) => {
-          this.setState({categories : res.data.categories, loaded: true});
-          console.log(this.state)
-        }
-      );
-  }
 
   componentDidMount(){
-    this.getCategory();
+    this.getCollectionForNewyork();
     console.log(this.state);
   }
 
-  getBackGroundImage(id){
-    switch(id){
-      case 1:
-        return Delivery;
-      case 2:
-        return Dine_out;
-      case 3:
-        return Nightlife;
-      case 4:
-        return Catching_up;
-      case 5:
-        return Takeaway;
-      case 6:
-        return Cafes;
-      case 7:
-        return Daily_Menus;
-      case 8:
-        return Breakfast;
-      case 9:
-        return Lunch;
-      case 10:
-        return Dinner;
-      case 11:
-        return Pubs_and_Bars;
-      case 13:
-        return Pocket_Friendly_Delivery;
-      case 14:
-        Clubs_and_Lounges;
-      default:
-        return Dinner;
-    }
+  getCollectionForNewyork(){
+    axios.get(collectionUrl + cityCode_NewYork, {
+      headers: {
+        "user-key": ZomatoAPIKey
+      }}).then(
+        (res) => {
+          console.log(res.data.collections);
+          this.setState({collections :res.data.collections})
+          this.setState({loaded: true})
+        }
+      );
   }
   renderCategoryRow(item){
 
-    let bgImage = this.getBackGroundImage(item.categories.id);
+    // let bgImage = this.getBackGroundImage(item.categories.id);.collection.image_url
+    let collectionTitle = item.collection.title;
+    let id = item.collection.collection_id;
+    let bgImage = item.collection.image_url;
     console.log(item)
     return(
-      <View style = {{flex: 1, padding: 10, alignItems: 'center'}}>
-        <Image key={item.id} source={bgImage} style = {{ height: 200}} opacity={0.85} resizeMethod={"scale"}/>
+      <View key= {id} style = {{flex: 1, padding: 10, alignItems: 'center'}}>
+        <Image source={{uri : bgImage}} style = {{ width: '100%', height: 200}} blurRadius={2} opacity={8} resizeMethod='scale'/>
 
         <View style = {{
           position: 'absolute',
@@ -100,32 +93,41 @@ export default class LaunchScreen extends Component {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Text style={{fontSize: 30, color: '#0f120b'}}>{item.categories.name}</Text>
+        <Text style={{fontSize: 30, color: '#0f120b'}}>{collectionTitle}</Text>
         </View>
       </View>
           
     )
 
-
   }
-
-  render () {
+  render() {
+    var collectionList;
     if(this.state.loaded){
-      return (
+      collectionList = (
         <View >
             <FlatList
-              data = {this.state.categories}
+              data = {this.state.collections}
               renderItem = {({item}) => this.renderCategoryRow(item)}
             />
         </View>
       )
     }
     else{
-      return(
+      collectionList = (
         <View >
           <Text>Retrieving ...</Text>
         </View>
       )
     } 
+
+    return (
+      <Container style={Headerstyles.container}>
+        <HeaderBar></HeaderBar>
+
+        <Content padder>
+          {collectionList}
+        </Content>
+      </Container>
+    );
   }
 }
