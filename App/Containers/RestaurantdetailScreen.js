@@ -50,7 +50,6 @@ class RestaurantdetailScreen extends Component {
   }
 
   componentWillMount(){
-    console.log(this.state.resId);
     this.getRestaurantDetails();
   }
 
@@ -60,7 +59,6 @@ class RestaurantdetailScreen extends Component {
       "user-key": ZomatoAPIKey
     }}).then(
       (res) => {
-        console.log(res);
         this.setState({resName: res.data.name});
         this.setState({resAddress: res.data.location.address});
         this.setState({resMenu: res.data.menu_url});
@@ -68,7 +66,6 @@ class RestaurantdetailScreen extends Component {
         this.setState({resEventUrl: res.data.events_url});
         this.setState({resImageUrl: res.data.thumb});
         this.setState({resPhotosUrl: res.data.photos_url});
-        console.log(this.state)
         loaded = true;
       });
   }
