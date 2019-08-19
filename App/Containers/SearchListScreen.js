@@ -3,8 +3,7 @@ import {View, FlatList,Image,TouchableOpacity  } from 'react-native'
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import styles from './Styles/SearchListScreenStyle'
-
+import styles from './Styles/SearchListScreenStyle';
 import {
   Container,
   Content,
@@ -22,7 +21,6 @@ class SearchListScreen extends Component {
   static navigationOptions = {
     title: 'Search Restaurant'
   };
-
   constructor(props){
     super(props);
     const { navigation } = this.props;
@@ -35,23 +33,25 @@ class SearchListScreen extends Component {
       loaded: false
     }
   }
-
   componentWillMount(){    
-    this.getSearchResult('');
+    this.getSearchResult(`${searchUrl}${this.state.collectionId}`);
   }
 
-  getSearchResult(text){
-    this.setState({loaded:false})
+  onChangeKeyword(text){
     var tempurl = '';
-
     if(text.length > 2){
+    this.setState({loaded:false})
       tempurl = `${searchUrl}${this.state.collectionId}&q=${text}`;
+      this.getSearchResult(tempurl);
     }
-    else
-    {
-      tempurl = `${searchUrl}${this.state.collectionId}`;
-    }
+    else if(text.length === 0){
+      this.setState({loaded:false})
+        tempurl = `${searchUrl}${this.state.collectionId}`;
+        this.getSearchResult(tempurl);
+      }
+  }
 
+  getSearchResult(tempurl){
     axios.get(tempurl, {
       headers: {
       "user-key": ZomatoAPIKey
@@ -107,17 +107,6 @@ class SearchListScreen extends Component {
     var searchList;
     if(this.state.loaded){
       searchList = (
-      <View>
-          <Form style = {{ padding: 15}}>
-          <Item rounded>
-            <Input placeholder="Search Restaurant" 
-            onChangeText = {text => {
-              this.getSearchResult(text);
-            }}
-            />
-          </Item>
-        </Form>
-
         <View >
             <FlatList
               data = {this.state.searchResult}
@@ -125,7 +114,6 @@ class SearchListScreen extends Component {
               ItemSeparatorComponent={this.renderSeparator}
             />            
         </View>
-      </View>     
        );
     }
     else{
@@ -136,6 +124,15 @@ class SearchListScreen extends Component {
     return (
       <Container>         
         <Content padder>
+        <Form style = {{ padding: 15}}>
+          <Item rounded>
+            <Input placeholder="Search Restaurant" 
+            onChangeText = {text => {
+              this.onChangeKeyword(text);
+            }}
+            />
+          </Item>
+        </Form>
         {searchList}
         </Content>
       </Container>
