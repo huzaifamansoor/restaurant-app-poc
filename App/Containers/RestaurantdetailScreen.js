@@ -1,26 +1,12 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-// Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
-
-// Styles
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styles from './Styles/RestaurantdetailScreenStyle';
-import { ScrollView, KeyboardAvoidingView,View,Linking , FlatList,Image,TouchableOpacity  } from 'react-native'
+import { ScrollView,View,Linking , FlatList,Image,TouchableOpacity  } from 'react-native'
 import Headerstyles from '../Components/Styles/HeaderBarStyle';
 import {
   Container,
-  Header,
-  Title,
   Content,
-  Button,
-  Icon,
-  Form,
-  Item,
   Spinner,
-  Input,
-  Left,
-  Right,
-  Body,
   Text
 } from "native-base";
 import {detailUrl} from '../Helper/URLs';
@@ -29,8 +15,7 @@ import {ZomatoAPIKey} from '../Helper/ApiKeys';
 
 class RestaurantdetailScreen extends Component {
   static navigationOptions = {
-    title: 'Resaurant Details',
-    /* No more header config here! */
+    title: 'Resaurant Details'
   };
 
   constructor(props){
@@ -74,18 +59,16 @@ class RestaurantdetailScreen extends Component {
 
   renderReviewRow(item,index){
     return(
-      <View style={{padding:15,justifyContent:"center"}}>
+      <View style={styles.reviewRow}>
         <Text>
-          <Text style= {{fontWeight:'bold'}}>{index+1}) </Text>
+          <Text style= {styles.reviewIndex}>{index+1}) </Text>
           <Text>
             {item.review.review_text}
           </Text>
-        </Text>
-        
+        </Text>        
       </View>
     );
-  }
-  
+  }  
 
   render () {
     var detailView ;
@@ -93,41 +76,40 @@ class RestaurantdetailScreen extends Component {
     if(this.state.loaded){
       detailView = (
         <ScrollView>
-      <View>
-        <View style = {{justifyContent: "center", alignItems: "center", padding: 15}}>
-          <Text style= {{fontWeight:'bold', fontSize:25}}>{this.state.resName}</Text>
-        </View>
+        <View>
+         <View style = {styles.resNameView}>
+            <Text style= {styles.resNametext}>{this.state.resName}</Text>
+          </View>
 
         <TouchableOpacity 
           onPress = {() => Linking.openURL(this.state.resPhotosUrl)}
         >
-          <View  style = {{ padding: 15, alignItems: 'center'}}>
-            <Image source={{uri : this.state.resImageUrl}} style = {{ padding: 15,borderRadius: 10,width: '100%', height: 300}}  resizeMethod='scale'/>
+          <View  style = {styles.resimageView}>
+            <Image source={{uri : this.state.resImageUrl}} style = {styles.resimage}  resizeMethod='scale'/>
           </View>
-        </TouchableOpacity >
-        
+        </TouchableOpacity >        
 
-        <View style = {{padding: 15,marginTop:10}}>
-          <Text style = {{fontWeight: 'bold', fontSize: 20}}>Address:</Text>
+        <View style = {styles.resHeadingView}>
+          <Text style = {styles.resHeading}>Address:</Text>
           <Text>{this.state.resAddress}</Text>
         </View>
 
-        <View style = {{paddingLeft: 15}}>
-          <Text style={{color: 'blue'}}
+        <View style = {styles.resLinkView}>
+          <Text style={styles.resLinkText}
             onPress={() => Linking.openURL(this.state.resEventUrl)}>
               Other Link
           </Text>
         </View>
 
-        <View style = {{paddingLeft: 15}}>
-          <Text style={{color: 'blue'}}
+        <View style = {styles.resLinkView}>
+          <Text style={styles.resLinkText}
             onPress={() => Linking.openURL(this.state.resMenu)}>
               Menu Link
           </Text>
         </View>
 
-        <View style = {{padding: 15,marginTop:10}}>
-          <Text style = {{fontWeight: 'bold', fontSize: 20}}>Reviews:</Text>
+        <View style = {styles.resHeadingView}>
+          <Text style = {styles.resHeading}>Reviews:</Text>
           <View>
             <FlatList
                 data = {this.state.resReviews}
@@ -146,9 +128,7 @@ class RestaurantdetailScreen extends Component {
       );
     }
     return (
-      <Container style={Headerstyles.container}>
-        {/* <HeaderBar></HeaderBar> */}
-
+      <Container>
         <Content padder>
           {detailView}
         </Content>
@@ -161,10 +141,8 @@ const mapStateToProps = (state) => {
   return {
   }
 }
-
 const mapDispatchToProps = (dispatch) => {
   return {
   }
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(RestaurantdetailScreen)

@@ -1,31 +1,15 @@
 import React, { Component } from 'react'
-// import { ScrollView, Text, Image, View ,ImageBackground, FlatList} from 'react-native';
-import DevscreensButton from '../../ignite/DevScreens/DevscreensButton.js'
 
-import { Images } from '../Themes'
 import axios from 'axios';
 // Styles
 import styles from './Styles/LaunchScreenStyles';
-import Headerstyles from '../Components/Styles/HeaderBarStyle';
-
-//import Component
-import HeaderBar from '../Components/HeaderBar';
-
-import Modal from "react-native-modal";
 import {
   Container,
-  Header,
-  Title,
   Content,
-  Button,
   Icon,
-  Left,
-  Right,
   Spinner,
-  Body,
   Text,
   Form,
-  Label,
   Item,
   Picker
 } from "native-base";
@@ -38,9 +22,9 @@ import {ZomatoAPIKey} from '../Helper/ApiKeys';
 
 export default class LaunchScreen extends Component {
   static navigationOptions = {
-    title: 'Home',
-    /* No more header config here! */
+    title: 'Home'
   };
+
   constructor(props){
       super(props);
 
@@ -62,15 +46,12 @@ export default class LaunchScreen extends Component {
         "user-key": ZomatoAPIKey
       }}).then(
         (res) => {
-          console.log(res);
           this.setState({collections :res.data.collections})
           this.setState({loaded: true})
         }
       );
   }
   renderCategoryRow(item){
-
-    // let bgImage = this.getBackGroundImage(item.categories.id);.collection.image_url
     let collectionTitle = item.collection.title;
     let id = item.collection.collection_id;
     let bgImage = item.collection.image_url;
@@ -84,24 +65,15 @@ export default class LaunchScreen extends Component {
             defaultCity : this.state.defaultCity
           })}
       >
-      <View key= {id} style = {{flex: 1, padding: 15, alignItems: 'center'}}>
-        <Image source={{uri : bgImage}} style = {{ borderRadius: 10,width: '100%', height: 200}} blurRadius={2.5} opacity={7} resizeMethod='scale'/>
+      <View key= {id} style = {styles.renderContainer}>
+        <Image source={{uri : bgImage}} style = {styles.bgimage} blurRadius={2.5} opacity={7} resizeMethod='scale'/>
 
-        <View style = {{
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0, 
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text style={{color: 'white',fontSize: 30,fontWeight: 'bold'}}>{collectionTitle}</Text>
+        <View style = {styles.absoluteView}>
+        <Text style={styles.bgText}>{collectionTitle}</Text>
         </View>
       </View>
       </TouchableOpacity >
     )
-
   }
 
   changeCity(text){
@@ -124,17 +96,12 @@ export default class LaunchScreen extends Component {
     }
     else{
       collectionList = (
-        <Spinner color="#255ca8" />
-        // <View style = {{flex: 1, padding: 15, alignItems: 'center'}}>
-          
-        // </View>
+          <Spinner color="#255ca8" />
       )
-    } 
+    }
 
     return (
-      <Container style={Headerstyles.container}>
-        {/* <HeaderBar ></HeaderBar> */}
-
+      <Container>
         <Content padder>
         <Form style={{ padding: 15}}>
             <Item picker>

@@ -1,43 +1,28 @@
 import React, { Component } from 'react'
-import { ScrollView, KeyboardAvoidingView,View, FlatList,Image,TouchableOpacity  } from 'react-native'
+import {View, FlatList,Image,TouchableOpacity  } from 'react-native'
 import { connect } from 'react-redux';
 import axios from 'axios';
-// Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
 
-// Styles
 import styles from './Styles/SearchListScreenStyle'
-
-import HeaderBar from '../Components/HeaderBar';
-import Headerstyles from '../Components/Styles/HeaderBarStyle';
 
 import {
   Container,
-  Header,
-  Title,
   Content,
   Spinner,
-  Button,
-  Icon,
   Form,
   Item,
   Input,
-  Left,
-  Right,
-  Body,
   Text
 } from "native-base";
 
 import {ZomatoAPIKey} from '../Helper/ApiKeys';
 import {searchUrl} from '../Helper/URLs';
-//cityCodes
-import {cityCode_NewYork, cityCode_NewJersey} from '../Helper/CityCodes';
 
 class SearchListScreen extends Component {
   static navigationOptions = {
-    title: 'Search Restaurant',
-    /* No more header config here! */
+    title: 'Search Restaurant'
   };
+
   constructor(props){
     super(props);
     const { navigation } = this.props;
@@ -85,60 +70,45 @@ class SearchListScreen extends Component {
     const cost = item.restaurant.average_cost_for_two;
     const rating = item.restaurant.user_rating.aggregate_rating;
 
-    console.log(bgImage + ' ' + resturantName + cost+' ' +cost +' ' +rating);
     return(
     <TouchableOpacity 
+      style = {styles.searchRow}
       onPress={ () =>
         this.props.navigation.navigate('RestaurantdetailScreen',
         {
           resId : resId,
         })}
     >
-      <View style = {{flexDirection:'row', padding: 15}}>
+      <View style = {styles.flexRow}>
         
-        <View style = {{flex : 1}}>
-          <Image source={{uri : bgImage}} style = {{ borderRadius: 10,width: 100, height: 100}} resizeMethod='scale'/>
+        <View style = {styles.mainView}>
+          <Image source={{uri : bgImage}} style = {styles.resImage} resizeMethod='scale'/>
         </View>
         
         <View style ={{flex:2}}>
-          <Text style={{fontSize: 18,fontWeight: 'bold'}}>{resturantName}</Text>
-          <Text style={{fontSize: 14,fontWeight: 'bold'}}>Rating: {rating}</Text>
-          <Text style={{fontSize: 14,fontWeight: 'bold'}}>Cost: {cost}</Text>
+          <Text style={styles.resName}>{resturantName}</Text>
+          <Text style={styles.resRating}>Rating: {rating}</Text>
+          <Text style={styles.resCost}>Cost: {cost}</Text>
         </View>
       </View>
     </TouchableOpacity >
     );
   }
 
-  changeCity(text){
-    this.setState({defaultCity:text});
-  }
+  renderSeparator = () => {
+    return (
+      <View
+        style={styles.rowSeprator}
+      />
+    );
+  };
 
-  render () {
-    
+  render () {    
     var searchList;
     if(this.state.loaded){
       searchList = (
       <View>
           <Form style = {{ padding: 15}}>
-          {/* <Item picker>
-              <Picker
-                mode="dropdown"
-                iosIcon={<Icon name="ios-arrow-down" />}
-                style={{ width: undefined }}
-                placeholder="Select your city"
-                placeholderStyle={{ color: "#bfc6ea" }}
-                placeholderIconColor="#007aff"
-                selectedValue= {this.state.defaultCity}
-                onValueChange={(text) => {
-                  this.changeCity(text);
-                }}
-              >
-                <Item label="New York" value={cityCode_NewYork} />
-                <Item label="New Jersey" value={cityCode_NewJersey} />
-              </Picker>
-            </Item> */}
-
           <Item rounded>
             <Input placeholder="Search Restaurant" 
             onChangeText = {text => {
@@ -152,6 +122,7 @@ class SearchListScreen extends Component {
             <FlatList
               data = {this.state.searchResult}
               renderItem = {({item}) => this.renderSearchResultRow(item)}
+              ItemSeparatorComponent={this.renderSeparator}
             />            
         </View>
       </View>     
@@ -163,26 +134,20 @@ class SearchListScreen extends Component {
       )
     }
     return (
-      <Container style={Headerstyles.container}>
-        {/* <HeaderBar></HeaderBar> */}
-         
+      <Container>         
         <Content padder>
         {searchList}
         </Content>
       </Container>
-
-    )
+    );
   }
 }
-
 const mapStateToProps = (state) => {
   return {
   }
 }
-
 const mapDispatchToProps = (dispatch) => {
   return {
   }
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(SearchListScreen)
