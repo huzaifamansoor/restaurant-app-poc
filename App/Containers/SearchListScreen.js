@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, KeyboardAvoidingView,View, FlatList,Image,TouchableHighlight } from 'react-native'
+import { ScrollView, KeyboardAvoidingView,View, FlatList,Image,TouchableOpacity  } from 'react-native'
 import { connect } from 'react-redux';
 import axios from 'axios';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
@@ -87,7 +87,7 @@ class SearchListScreen extends Component {
 
     console.log(bgImage + ' ' + resturantName + cost+' ' +cost +' ' +rating);
     return(
-    <TouchableHighlight
+    <TouchableOpacity 
       onPress={ () =>
         this.props.navigation.navigate('RestaurantdetailScreen',
         {
@@ -106,7 +106,7 @@ class SearchListScreen extends Component {
           <Text style={{fontSize: 14,fontWeight: 'bold'}}>Cost: {cost}</Text>
         </View>
       </View>
-    </TouchableHighlight>
+    </TouchableOpacity >
     );
   }
 

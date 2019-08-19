@@ -29,7 +29,7 @@ import {
   Item,
   Picker
 } from "native-base";
-import {View, FlatList,Image,TouchableHighlight} from 'react-native';
+import {View, FlatList,Image,TouchableOpacity } from 'react-native';
 
 //cityCodes
 import {cityCode_NewYork, cityCode_NewJersey} from '../Helper/CityCodes';
@@ -76,7 +76,7 @@ export default class LaunchScreen extends Component {
     let bgImage = item.collection.image_url;
 
     return(
-      <TouchableHighlight
+      <TouchableOpacity 
         onPress={ () =>
           this.props.navigation.navigate('SearchListScreen',
           {
@@ -99,7 +99,7 @@ export default class LaunchScreen extends Component {
         <Text style={{color: 'white',fontSize: 30,fontWeight: 'bold'}}>{collectionTitle}</Text>
         </View>
       </View>
-      </TouchableHighlight>
+      </TouchableOpacity >
     )
 
   }

@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 // Styles
 import styles from './Styles/RestaurantdetailScreenStyle';
-import { ScrollView, KeyboardAvoidingView,View,Linking , FlatList,Image,TouchableHighlight } from 'react-native'
+import { ScrollView, KeyboardAvoidingView,View,Linking , FlatList,Image,TouchableOpacity  } from 'react-native'
 import Headerstyles from '../Components/Styles/HeaderBarStyle';
 import {
   Container,
@@ -98,13 +98,13 @@ class RestaurantdetailScreen extends Component {
           <Text style= {{fontWeight:'bold', fontSize:25}}>{this.state.resName}</Text>
         </View>
 
-        <TouchableHighlight
+        <TouchableOpacity 
           onPress = {() => Linking.openURL(this.state.resPhotosUrl)}
         >
           <View  style = {{ padding: 15, alignItems: 'center'}}>
             <Image source={{uri : this.state.resImageUrl}} style = {{ padding: 15,borderRadius: 10,width: '100%', height: 300}}  resizeMethod='scale'/>
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity >
         
 
         <View style = {{padding: 15,marginTop:10}}>
