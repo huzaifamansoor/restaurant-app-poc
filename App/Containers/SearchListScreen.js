@@ -16,6 +16,7 @@ import {
   Header,
   Title,
   Content,
+  Spinner,
   Button,
   Icon,
   Form,
@@ -55,6 +56,7 @@ class SearchListScreen extends Component {
   }
 
   getSearchResult(text){
+    this.setState({loaded:false})
     var tempurl = '';
 
     if(text.length > 2){
@@ -157,9 +159,7 @@ class SearchListScreen extends Component {
     }
     else{
       searchList = (
-      <View style = {{flex: 1, padding: 15, alignItems: 'center'}}>
-        <Text >Retrieving ...</Text>
-      </View>
+        <Spinner color="#255ca8" />
       )
     }
     return (

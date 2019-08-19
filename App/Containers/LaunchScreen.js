@@ -21,6 +21,7 @@ import {
   Icon,
   Left,
   Right,
+  Spinner,
   Body,
   Text,
   Form,
@@ -123,9 +124,10 @@ export default class LaunchScreen extends Component {
     }
     else{
       collectionList = (
-        <View style = {{flex: 1, padding: 15, alignItems: 'center'}}>
-          <Text >Retrieving ...</Text>
-        </View>
+        <Spinner color="#255ca8" />
+        // <View style = {{flex: 1, padding: 15, alignItems: 'center'}}>
+          
+        // </View>
       )
     } 
 

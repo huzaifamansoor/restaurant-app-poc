@@ -16,6 +16,7 @@ import {
   Icon,
   Form,
   Item,
+  Spinner,
   Input,
   Left,
   Right,
@@ -141,9 +142,7 @@ class RestaurantdetailScreen extends Component {
 
     else{
       detailView = (
-        <View style = {{flex: 1, padding: 15, alignItems: 'center'}}>
-          <Text >Retrieving ...</Text>
-        </View>
+        <Spinner color="#255ca8" />
       );
     }
     return (
