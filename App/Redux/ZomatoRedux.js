@@ -86,9 +86,6 @@ export const getSearchWithoutParams = (state, {searchResult}) => {
 }
 
 export const setRestaurantDetail = (state,{restaurantDetail}) => {
-  console.log('in reducer getRD')
-  console.log(restaurantDetail);
-
   return state.merge(
     { 
       restaurantDetail,

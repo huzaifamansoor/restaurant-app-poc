@@ -25,7 +25,6 @@ export function * searchWithParamsSaga(api,action){
   const response = yield call(api.getSearchListWithQueryParam,{
       collection_id : collection_id,q :searchKeyword
     });
-  
   if (response.ok) {
     let data =  response.data;    
     data.searchResultLoaded = true;
@@ -33,6 +32,7 @@ export function * searchWithParamsSaga(api,action){
   }
 }
 
+//Search Restaurant Without Params
 export function * searchWithoutParamsSaga(api,action){
   const data = yield select(ZomatoSelectors.getData) //read collection_id from state
   const collection_id = data.collectionId; //read collection_id from state
@@ -53,7 +53,6 @@ export function * getResDetailsSaga(api,action){
   const restaurant_id = data.restaurantId;
 
   const response = yield call(api.getResDetail, restaurant_id);
-  console.log(response) 
   if (response.ok) {
     let data =  response.data;    
     data.restaurantIsLoaded = true;
