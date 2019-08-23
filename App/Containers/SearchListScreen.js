@@ -31,7 +31,7 @@ class SearchListScreen extends Component {
   }
 
   onChangeKeyword(text){
-    if(text.length > 2 || text.length===0){
+    if(text.length > 2){
       this.props.setSearchKeyword(text);
       this.props.getSearchResult(text);
     }
@@ -55,11 +55,11 @@ class SearchListScreen extends Component {
     >
       <View style = {styles.flexRow}>
         
-        <View style = {styles.mainView}>
+        <View style = {styles.imageView}>
           <Image source={{uri : bgImage}} style = {styles.resImage} resizeMethod='scale'/>
         </View>
         
-        <View style ={{flex:2}}>
+        <View style ={styles.detailsView}>
           <Text style={styles.resName}>{resturantName}</Text>
           <Text style={styles.resRating}>Rating: {rating}</Text>
           <Text style={styles.resCost}>Cost: {cost}</Text>
