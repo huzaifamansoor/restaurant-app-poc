@@ -27,13 +27,18 @@ class SearchListScreen extends Component {
     const { navigation } = this.props;   
     this.props.setCollectionId(navigation.getParam('collectionId', '1'));
     this.props.setSearchKeyword('');
-    this.props.getSearchResult('');
+    this.props.searchWithoutParams();
   }
 
   onChangeKeyword(text){
-    if(text.length > 2 || text.length===0){
-      this.props.setSearchKeyword(text);
-      this.props.getSearchResult(text);
+    if(text.length > 2){
+      this.props.setSearchKeyword(text);        
+      this.props.searchWithParams(text);
+      
+    }
+    else if(text.length === 0){
+      this.props.setSearchKeyword('');
+      this.props.searchWithoutParams();
     }
   }
 
@@ -55,11 +60,11 @@ class SearchListScreen extends Component {
     >
       <View style = {styles.flexRow}>
         
-        <View style = {styles.mainView}>
+        <View style = {styles.imageView}>
           <Image source={{uri : bgImage}} style = {styles.resImage} resizeMethod='scale'/>
         </View>
         
-        <View style ={{flex:2}}>
+        <View style ={styles.detailsView}>
           <Text style={styles.resName}>{resturantName}</Text>
           <Text style={styles.resRating}>Rating: {rating}</Text>
           <Text style={styles.resCost}>Cost: {cost}</Text>
@@ -126,8 +131,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setCollectionId: (collectionId) => dispatch(ZomatoActions.setCollectionId(collectionId)),
     setSearchKeyword : (searchKeyword) =>  dispatch(ZomatoActions.setSearchKeyword(searchKeyword)),
-    getSearchResult : (searchResult) => dispatch(ZomatoActions.getSearchResult(searchResult)),
-    
+    searchWithParams : (searchResult) => dispatch(ZomatoActions.searchWithParams(searchResult)),
+    searchWithoutParams : () => dispatch(ZomatoActions.searchWithoutParams()),
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(SearchListScreen)

@@ -4,7 +4,8 @@ import {ZomatoSelectors} from '../Redux/ZomatoRedux';
 
 //get restaurant collection from zomato API using apisauce
 export function * getCollectionSaga(api,action) {
-  const city_id = action.collections;   // read city Id from payload
+  const data = yield select(ZomatoSelectors.getData) 
+  const city_id = data.cityId  // read city Id from payload
   const response = yield call(api.getResCollection, city_id); // call Zomato API
   
   //If response is OK then update respective fields to set state.
@@ -12,45 +13,51 @@ export function * getCollectionSaga(api,action) {
     let data =  response.data;    
     data.collectionIsLoaded = true;
     data.cityId = city_id;
-    yield put(ZomatoActions.getCollection(data));
+    yield put(ZomatoActions.setCollection(data));
   }
 }
 
 //get restaurant collection from zomato API using apisauce
-export function * getSearchResultSaga(api,action){  
-  let response;
-  let q = yield select(ZomatoSelectors.getData).searchKeyword; //read search params from state
-  const collection_id = yield select(ZomatoSelectors.getData).collectionId; //read collection_id from state
-
-  if(q !== ''){
-
-    //call api function to get searchList with query params.
-    response = yield call(api.getSearchListWithQueryParam,{
-      collection_id : collection_id,q :q
+export function * searchWithParamsSaga(api,action){
+  const data = yield select(ZomatoSelectors.getData) //read search params from state
+  const searchKeyword = data.searchKeyword;
+  const collection_id = data.collectionId; //read collection_id from state
+  const response = yield call(api.getSearchListWithQueryParam,{
+      collection_id : collection_id,q :searchKeyword
     });
+  
+  if (response.ok) {
+    let data =  response.data;    
+    data.searchResultLoaded = true;
+    yield put(ZomatoActions.getSearchWithParams(data));
   }
-  else{
-    //call api function to get searchList with out query params.
-    response = yield call(api.getSearchListWithOutQueryParam,collection_id);    
-  }
+}
+
+export function * searchWithoutParamsSaga(api,action){
+  const data = yield select(ZomatoSelectors.getData) //read collection_id from state
+  const collection_id = data.collectionId; //read collection_id from state
+  const response = yield call(api.getSearchListWithOutQueryParam,{
+      collection_id : collection_id
+    });
+  
   if (response.ok) {    
     let data =  response.data;    
     data.searchResultLoaded = true;
-    yield put(ZomatoActions.getSearchResult(data));
+    yield put(ZomatoActions.getSearchWithoutParams(data));
   }
-
-  return;
 }
 
 //get restaurant detail for specific restaurant Id
 export function * getResDetailsSaga(api,action){
-  const restaurant_id = action.restaurantDetail;  
+  const data = yield select(ZomatoSelectors.getData);
+  const restaurant_id = data.restaurantId;
+
   const response = yield call(api.getResDetail, restaurant_id);
-  
+  console.log(response) 
   if (response.ok) {
     let data =  response.data;    
     data.restaurantIsLoaded = true;
-    yield put(ZomatoActions.getRestaurantDetail(data));
+    yield put(ZomatoActions.setRestaurantDetail(data));
   }
 }
 

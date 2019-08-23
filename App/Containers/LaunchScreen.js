@@ -57,7 +57,8 @@ class LaunchScreen extends Component {
   }
 
   changeCity(text){
-    this.props.getRestaurantCollection(text);
+    this.props.setCityId(text);
+    this.props.getRestaurantCollection();
   }
 
   render() {
@@ -127,7 +128,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    getRestaurantCollection: (cityId) => dispatch(ZomatoActions.getCollection(cityId))
+    getRestaurantCollection: (cityId) => dispatch(ZomatoActions.getCollection(cityId)),
+    setCityId: (cityId) => dispatch(ZomatoActions.setCityId(cityId))
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(LaunchScreen)

@@ -5,12 +5,18 @@ import Immutable from 'seamless-immutable'
 
 const { Types, Creators } = createActions({
   //Launch Screen Actions
-  getCollection : ['collections'],
+  getCollection : null,
   setCollectionId : ['collectionId'],
   setRestaurantId : ['restaurantId'],
-  getSearchResult : ['searchResult'],
-  getRestaurantDetail : ['restaurantDetail'],
-  setSearchKeyword : ['searchKeyword']
+  setCityId : ['cityId'],
+  getRestaurantDetail : null,
+  setSearchKeyword : ['searchKeyword'],
+  searchWithParams : ['searchResult'],
+  searchWithoutParams : null,
+  getSearchWithParams : ['searchResult'],
+  getSearchWithoutParams : ['searchResult'],
+  setCollection : ['collections'],
+  setRestaurantDetail : ['restaurantDetail'],
 })
 
 export const ZomatoTypes = Types
@@ -31,7 +37,8 @@ export const INITIAL_STATE = Immutable({
 
   //RestaurantDetail Screen
   restaurantId : '1080',
-  restaurantDetail : null
+  restaurantDetail : null,
+  restaurantIsLoaded : false
 })
 
 /* ------------- Selectors ------------- */
@@ -42,7 +49,7 @@ export const ZomatoSelectors = {
 
 /* ------------- Reducers ------------- */
 
-export const getCollection = (state,{collections}) => {
+export const setCollection = (state,{collections}) => {
   return state.merge(
     { collections: collections.collections, 
       collectionIsLoaded: collections.collectionIsLoaded,
@@ -58,18 +65,30 @@ export const setCollectionId = (state, {collectionId}) => {
 
 export const setRestaurantId = (state, {restaurantId}) => {
   return state.merge({
-    restaurantId
+    restaurantId,
+    restaurantIsLoaded : false
+
   })
 }
 
-export const getSearchResult = (state, {searchResult}) => {
+export const getSearchWithParams = (state, {searchResult}) => {
   return state.merge({
     searchResult : searchResult.restaurants,
     searchResultLoaded : searchResult.searchResultLoaded
   })
 }
 
-export const getRestaurantDetail = (state,{restaurantDetail}) => {
+export const getSearchWithoutParams = (state, {searchResult}) => {
+  return state.merge({
+    searchResult : searchResult.restaurants,
+    searchResultLoaded : searchResult.searchResultLoaded
+  })
+}
+
+export const setRestaurantDetail = (state,{restaurantDetail}) => {
+  console.log('in reducer getRD')
+  console.log(restaurantDetail);
+
   return state.merge(
     { 
       restaurantDetail,
@@ -79,17 +98,26 @@ export const getRestaurantDetail = (state,{restaurantDetail}) => {
 
 export const setSearchKeyword = (state, {searchKeyword}) => {
   return state.merge({
-    searchKeyword
+    searchKeyword,
+    searchResultLoaded : false
+  })
+}
+export const setCityId = (state, {cityId}) => {
+  return state.merge({
+    cityId,
+    collectionIsLoaded : false
   })
 }
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.GET_COLLECTION] :getCollection,
   [Types.SET_COLLECTION_ID] : setCollectionId,
-  [Types.GET_SEARCH_RESULT] : getSearchResult,
   [Types.SET_RESTAURANT_ID] : setRestaurantId,
-  [Types.GET_RESTAURANT_DETAIL] : getRestaurantDetail,
-  [Types.SET_SEARCH_KEYWORD] :setSearchKeyword
+  [Types.SET_SEARCH_KEYWORD] :setSearchKeyword,
+  [Types.GET_SEARCH_WITH_PARAMS] : getSearchWithParams,
+  [Types.GET_SEARCH_WITHOUT_PARAMS] : getSearchWithoutParams,
+  [Types.SET_CITY_ID] : setCityId,
+  [Types.SET_COLLECTION] : setCollection,
+  [Types.SET_RESTAURANT_DETAIL] : setRestaurantDetail
 })

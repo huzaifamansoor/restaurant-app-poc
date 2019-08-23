@@ -15,8 +15,9 @@ import { startup } from './StartupSagas'
 import { getUserAvatar } from './GithubSagas'
 import { 
   getCollectionSaga,
-  getSearchResultSaga,
-  getResDetailsSaga
+  getResDetailsSaga,
+  searchWithParamsSaga,
+  searchWithoutParamsSaga,
 } from './ZomatoSagas'
 
 /* ------------- API ------------- */
@@ -36,8 +37,10 @@ export default function * root () {
     // some sagas receive extra parameters in addition to an action
     takeLatest(GithubTypes.USER_REQUEST, getUserAvatar, api),
     takeLatest(ZomatoTypes.GET_COLLECTION, getCollectionSaga, api),
-    takeLatest(ZomatoTypes.GET_SEARCH_RESULT, getSearchResultSaga, api),
-    takeLatest(ZomatoTypes.GET_RESTAURANT_DETAIL, getResDetailsSaga, api)
+    takeLatest(ZomatoTypes.GET_RESTAURANT_DETAIL, getResDetailsSaga, api),
+    
+    takeLatest(ZomatoTypes.SEARCH_WITH_PARAMS, searchWithParamsSaga, api),
+    takeLatest(ZomatoTypes.SEARCH_WITHOUT_PARAMS, searchWithoutParamsSaga, api)
     
   ])
 }
