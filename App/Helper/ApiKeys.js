@@ -1,1 +1,1 @@
-export const ZomatoAPIKey = '2b570cc3eee73112976e7050d376ae7e';
+export const ZomatoAPIKey = 'beb56d811fead7577fbbdb98594b2dbe';
