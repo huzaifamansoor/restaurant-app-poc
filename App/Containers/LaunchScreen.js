@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-
-import axios from 'axios';
+import {connect} from 'react-redux';
+import ZomatoActions from '../Redux/ZomatoRedux'
 // Styles
 import styles from './Styles/LaunchScreenStyles';
 import {
@@ -17,40 +17,20 @@ import {View, FlatList,Image,TouchableOpacity } from 'react-native';
 
 //cityCodes
 import {cityCode_NewYork, cityCode_NewJersey} from '../Helper/CityCodes';
-import {collectionUrl, categoriesUrl} from '../Helper/URLs';
-import {ZomatoAPIKey} from '../Helper/ApiKeys';
 
-export default class LaunchScreen extends Component {
+class LaunchScreen extends Component {
   static navigationOptions = {
     title: 'Home'
   };
 
   constructor(props){
       super(props);
-
-    this.state = {
-      collections : [],
-      loaded : false,      
-      modalVisible : false,
-      defaultCity: cityCode_NewYork
-    }
   }
 
   componentDidMount(){
-    this.getCollectionForCity();
+    this.props.getRestaurantCollection(this.props.cityId);
   }
 
-  getCollectionForCity(){
-    axios.get(collectionUrl + this.state.defaultCity, {
-      headers: {
-        "user-key": ZomatoAPIKey
-      }}).then(
-        (res) => {
-          this.setState({collections :res.data.collections})
-          this.setState({loaded: true})
-        }
-      );
-  }
   renderCategoryRow(item){
     let collectionTitle = item.collection.title;
     let id = item.collection.collection_id;
@@ -62,7 +42,7 @@ export default class LaunchScreen extends Component {
           this.props.navigation.navigate('SearchListScreen',
           {
             collectionId : id,
-            defaultCity : this.state.defaultCity
+            defaultCity : this.props.cityId
           })}
       >
       <View key= {id} style = {styles.renderContainer}>
@@ -77,20 +57,28 @@ export default class LaunchScreen extends Component {
   }
 
   changeCity(text){
-    this.setState({defaultCity:text});
-    this.setState({loaded: false})
-    this.getCollectionForCity();
+    this.props.getRestaurantCollection(text);
   }
 
   render() {
     var collectionList;
-    if(this.state.loaded){
+    if(this.props.isCollectionLoaded){
       collectionList = (
         <View >
-            <FlatList
-              data = {this.state.collections}
+          {
+            this.props.collections.length > 0 ? (
+              <FlatList
+              data = {this.props.collections}
               renderItem = {({item}) => this.renderCategoryRow(item)}
-            />            
+              keyExtractor={(item, index) => index.toString()}
+            />
+            ):(
+              <View>
+                <Text>No data Found</Text>
+              </View>
+            )
+          }
+                        
         </View>
       )
     }
@@ -112,7 +100,7 @@ export default class LaunchScreen extends Component {
                 placeholder="Select your city"
                 placeholderStyle={{ color: "#bfc6ea" }}
                 placeholderIconColor="#007aff"
-                selectedValue= {this.state.defaultCity}
+                selectedValue= {this.props.cityId}
                 onValueChange={(text) => {
                   this.changeCity(text);
                 }}
@@ -128,3 +116,18 @@ export default class LaunchScreen extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    data: state.zomato,
+    collections : state.zomato.collections,
+    isCollectionLoaded : state.zomato.collectionIsLoaded,
+    cityId : state.zomato.cityId
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getRestaurantCollection: (cityId) => dispatch(ZomatoActions.getCollection(cityId))
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(LaunchScreen)

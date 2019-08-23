@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {View, FlatList,Image,TouchableOpacity  } from 'react-native'
 import { connect } from 'react-redux';
-import axios from 'axios';
 
 import styles from './Styles/SearchListScreenStyle';
 import {
@@ -14,8 +13,8 @@ import {
   Text
 } from "native-base";
 
-import {ZomatoAPIKey} from '../Helper/ApiKeys';
-import {searchUrl} from '../Helper/URLs';
+import ZomatoActions from '../Redux/ZomatoRedux';
+
 
 class SearchListScreen extends Component {
   static navigationOptions = {
@@ -23,46 +22,21 @@ class SearchListScreen extends Component {
   };
   constructor(props){
     super(props);
-    const { navigation } = this.props;
-
-    this.state = {
-      collectionId : navigation.getParam('collectionId', '1'),
-      searchResult : [],
-      searchkeyword : '',
-      defaultCity : navigation.getParam('defaultCity', '1'),
-      loaded: false
-    }
   }
-  componentWillMount(){    
-    this.getSearchResult(`${searchUrl}${this.state.collectionId}`);
+  componentWillMount(){
+    const { navigation } = this.props;   
+    this.props.setCollectionId(navigation.getParam('collectionId', '1'));
+    this.props.setSearchKeyword('');
+    this.props.getSearchResult('');
   }
 
   onChangeKeyword(text){
-    var tempurl = '';
-    if(text.length > 2){
-    this.setState({loaded:false})
-      tempurl = `${searchUrl}${this.state.collectionId}&q=${text}`;
-      this.getSearchResult(tempurl);
+    if(text.length > 2 || text.length===0){
+      this.props.setSearchKeyword(text);
+      this.props.getSearchResult(text);
     }
-    else if(text.length === 0){
-      this.setState({loaded:false})
-        tempurl = `${searchUrl}${this.state.collectionId}`;
-        this.getSearchResult(tempurl);
-      }
   }
 
-  getSearchResult(tempurl){
-    axios.get(tempurl, {
-      headers: {
-      "user-key": ZomatoAPIKey
-    }}).then(
-      (res) => {
-        this.setState({searchResult: res.data.restaurants,
-        loaded: true
-        });
-      }
-    );
-  }
   renderSearchResultRow(item){
     const resId = item.restaurant.id;
     const bgImage = item.restaurant.featured_image;
@@ -103,15 +77,17 @@ class SearchListScreen extends Component {
     );
   };
 
-  render () {    
+  render () { 
+    console.log(this.props)
     var searchList;
-    if(this.state.loaded){
+    if(this.props.searchResultLoaded){
       searchList = (
         <View >
             <FlatList
-              data = {this.state.searchResult}
+              data = {this.props.searchResult}
               renderItem = {({item}) => this.renderSearchResultRow(item)}
               ItemSeparatorComponent={this.renderSeparator}
+              keyExtractor={(item, index) => index.toString()}
             />            
         </View>
        );
@@ -141,10 +117,17 @@ class SearchListScreen extends Component {
 }
 const mapStateToProps = (state) => {
   return {
+    collectionId : state.zomato.collectionId,
+    searchResult : state.zomato.searchResult,
+    searchResultLoaded : state.zomato.searchResultLoaded
   }
 }
 const mapDispatchToProps = (dispatch) => {
   return {
+    setCollectionId: (collectionId) => dispatch(ZomatoActions.setCollectionId(collectionId)),
+    setSearchKeyword : (searchKeyword) =>  dispatch(ZomatoActions.setSearchKeyword(searchKeyword)),
+    getSearchResult : (searchResult) => dispatch(ZomatoActions.getSearchResult(searchResult)),
+    
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(SearchListScreen)

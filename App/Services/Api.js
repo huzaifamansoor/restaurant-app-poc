@@ -1,8 +1,7 @@
-// a library to wrap and simplify api calls
-import apisauce from 'apisauce'
 
-// our "constructor"
-const create = (baseURL = 'https://api.github.com/') => {
+import apisauce from 'apisauce'
+import {ZomatoAPIKey} from '../Helper/ApiKeys';
+const create = (baseURL = 'https://developers.zomato.com/api/v2.1/') => {
   // ------
   // STEP 1
   // ------
@@ -14,7 +13,8 @@ const create = (baseURL = 'https://api.github.com/') => {
     baseURL,
     // here are some default headers
     headers: {
-      'Cache-Control': 'no-cache'
+      'user-key': ZomatoAPIKey,
+      'Content-Type' : 'application/json'
     },
     // 10 second timeout...
     timeout: 10000
@@ -38,6 +38,16 @@ const create = (baseURL = 'https://api.github.com/') => {
   const getRate = () => api.get('rate_limit')
   const getUser = (username) => api.get('search/users', {q: username})
 
+  const getResCollection = (city_id) => api.get('collections',{city_id})
+
+  const getSearchListWithOutQueryParam = (collection_id) => api.get('search',{collection_id})
+  const getSearchListWithQueryParam = (params) => {
+    return api.get('search',{
+      collection_id : params.collection_id, 
+      q: params.q})
+    };
+      
+  const getResDetail = (restaurant_id) => api.get('restaurant',{res_id : restaurant_id})
   // ------
   // STEP 3
   // ------
@@ -54,7 +64,11 @@ const create = (baseURL = 'https://api.github.com/') => {
     // a list of the API functions from step 2
     getRoot,
     getRate,
-    getUser
+    getUser,
+    getResCollection,
+    getSearchListWithOutQueryParam,
+    getSearchListWithQueryParam,
+    getResDetail
   }
 }
 

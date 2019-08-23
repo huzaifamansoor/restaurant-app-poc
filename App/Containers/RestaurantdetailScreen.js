@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styles from './Styles/RestaurantdetailScreenStyle';
-import { ScrollView,View,Linking , FlatList,Image,TouchableOpacity  } from 'react-native'
-import Headerstyles from '../Components/Styles/HeaderBarStyle';
+import { ScrollView,View,Linking , FlatList,Image,TouchableOpacity  } from 'react-native';
 import {
   Container,
   Content,
   Spinner,
   Text
 } from "native-base";
-import {detailUrl} from '../Helper/URLs';
-import axios from 'axios';
-import {ZomatoAPIKey} from '../Helper/ApiKeys';
+import ZomatoActions from '../Redux/ZomatoRedux';
 
 class RestaurantdetailScreen extends Component {
   static navigationOptions = {
@@ -20,41 +17,13 @@ class RestaurantdetailScreen extends Component {
 
   constructor(props){
     super(props);
-
-    const { navigation } = this.props;
-
-    this.state = {
-      resId : navigation.getParam('resId', '18881831'),
-      loaded: false,
-      resName: '',
-      resAddress : '',
-      resReviews : [],
-      resMenu : '',
-      resEventUrl : '',
-      resImageUrl: '',
-      resPhotosUrl: ''
-    }
   }
 
   componentWillMount(){
-    this.getRestaurantDetails();
-  }
-
-  getRestaurantDetails(){
-    axios.get(detailUrl+this.state.resId, {
-      headers: {
-      "user-key": ZomatoAPIKey
-    }}).then(
-      (res) => {
-        this.setState({resName: res.data.name});
-        this.setState({resAddress: res.data.location.address});
-        this.setState({resMenu: res.data.menu_url});
-        this.setState({resReviews: res.data.all_reviews.reviews});
-        this.setState({resEventUrl: res.data.events_url});
-        this.setState({resImageUrl: res.data.thumb});
-        this.setState({resPhotosUrl: res.data.photos_url});
-        this.setState({loaded:true});
-      });
+    const { navigation } = this.props;
+    const res_id = navigation.getParam('resId', '18881831');
+    this.props.setRestaurantId(res_id);
+    this.props.getRestaurantDetail(res_id);
   }
 
   renderReviewRow(item,index){
@@ -73,37 +42,37 @@ class RestaurantdetailScreen extends Component {
   render () {
     var detailView ;
 
-    if(this.state.loaded){
+    if(this.props.restaurantIsLoaded){
       detailView = (
         <ScrollView>
         <View>
          <View style = {styles.resNameView}>
-            <Text style= {styles.resNametext}>{this.state.resName}</Text>
+            <Text style= {styles.resNametext}>{this.props.restaurantDetail.name}</Text>
           </View>
 
         <TouchableOpacity 
-          onPress = {() => Linking.openURL(this.state.resPhotosUrl)}
+          onPress = {() => Linking.openURL(this.props.restaurantDetail.photos_url)}
         >
           <View  style = {styles.resimageView}>
-            <Image source={{uri : this.state.resImageUrl}} style = {styles.resimage}  resizeMethod='scale'/>
+            <Image source={{uri : this.props.restaurantDetail.thumb}} style = {styles.resimage}  resizeMethod='scale'/>
           </View>
         </TouchableOpacity >        
 
         <View style = {styles.resHeadingView}>
           <Text style = {styles.resHeading}>Address:</Text>
-          <Text>{this.state.resAddress}</Text>
+          <Text>{this.props.restaurantDetail.location.address}</Text>
         </View>
 
         <View style = {styles.resLinkView}>
           <Text style={styles.resLinkText}
-            onPress={() => Linking.openURL(this.state.resEventUrl)}>
+            onPress={() => Linking.openURL(this.props.restaurantDetail.events_url)}>
               Other Link
           </Text>
         </View>
 
         <View style = {styles.resLinkView}>
           <Text style={styles.resLinkText}
-            onPress={() => Linking.openURL(this.state.resMenu)}>
+            onPress={() => Linking.openURL(this.props.restaurantDetail.menu_url)}>
               Menu Link
           </Text>
         </View>
@@ -112,8 +81,9 @@ class RestaurantdetailScreen extends Component {
           <Text style = {styles.resHeading}>Reviews:</Text>
           <View>
             <FlatList
-                data = {this.state.resReviews}
+                data = {this.props.restaurantDetail.all_reviews.reviews}
                 renderItem = {({item,index}) => this.renderReviewRow(item,index)}
+                keyExtractor={(item, index) => index.toString()}
               />   
           </View>
         </View>        
@@ -139,10 +109,15 @@ class RestaurantdetailScreen extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    restaurantId : state.zomato.restaurantId,
+    restaurantDetail : state.zomato.restaurantDetail,
+    restaurantIsLoaded: state.zomato.restaurantIsLoaded
   }
 }
 const mapDispatchToProps = (dispatch) => {
   return {
+    setRestaurantId: (restaurantId) => dispatch(ZomatoActions.setRestaurantId(restaurantId)),
+    getRestaurantDetail : (restaurantId) => dispatch(ZomatoActions.getRestaurantDetail(restaurantId)),
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(RestaurantdetailScreen)

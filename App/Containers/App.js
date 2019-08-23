@@ -3,23 +3,12 @@ import DebugConfig from '../Config/DebugConfig'
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import RootContainer from './RootContainer'
-// import { createStore, applyMiddleware } from 'redux';
 import createStore from '../Redux';
-// import createSagaMiddleware from 'redux-saga';
-import rootSaga from '../Sagas';
-// import reducer from '../reducers';
-import { logger } from 'redux-logger';
+// import rootSaga from '../Sagas';
+// import { logger } from 'redux-logger';
 
 // create our store
 const store = createStore()
-
-// const sagaMiddleware = createSagaMiddleware();
-
-// const store = createStore(
-//    reducer,
-//    applyMiddleware(sagaMiddleware, logger),
-// );
-// sagaMiddleware.run(rootSaga);
 
 /**
  * Provides an entry point into our application.  Both index.ios.js and index.android.js
