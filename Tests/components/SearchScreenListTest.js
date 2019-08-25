@@ -1,12 +1,12 @@
 import 'react-native';
 import React from 'react';
 
-import LaunchScreen from '../../App/Containers/LaunchScreen';
+import { SearchScreenList  } from '../../App/Components/SearchScreenList';
 import renderer from 'react-test-renderer';
 
-test('LaunchScreen Snapshot' , () => {
+test('SearchScreenList Snapshot' , () => {
     const snap = renderer.create(
-        <LaunchScreen/>
+        <SearchScreenList/>
     ).toJSON();
 
     expect(snap).toMatchSnapshot();    

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import styles from './Styles/RestaurantdetailScreenStyle';
-import { ScrollView,View,Linking , FlatList,Image,TouchableOpacity  } from 'react-native';
+// import styles from './Styles/RestaurantdetailScreenStyle';
+import { ScrollView,View } from 'react-native';
 import {
   Container,
   Content,
@@ -9,8 +9,10 @@ import {
   Text
 } from "native-base";
 import ZomatoActions from '../Redux/ZomatoRedux';
+import RestaurantDetail from '../Components/RestaurantDetail';
+import RestaurantReviewList from '../Components/RestaurantReviewList';
 
-class RestaurantdetailScreen extends Component {
+export class RestaurantdetailScreen extends Component {
   static navigationOptions = {
     title: 'Resaurant Details'
   };
@@ -25,73 +27,19 @@ class RestaurantdetailScreen extends Component {
     this.props.setRestaurantId(res_id);
     this.props.getRestaurantDetail(res_id);
   }
-
-  renderReviewRow(item,index){
-    return(
-      <View style={styles.reviewRow}>
-        <Text>
-          <Text style= {styles.reviewIndex}>{index+1}) </Text>
-          <Text>
-            {item.review.review_text}
-          </Text>
-        </Text>        
-      </View>
-    );
-  }  
-
   render () {
     var detailView ;
 
     if(this.props.restaurantIsLoaded){
       detailView = (
         <ScrollView>
-        <View>
-         <View style = {styles.resNameView}>
-            <Text style= {styles.resNametext}>{this.props.restaurantDetail.name}</Text>
-          </View>
-
-        <TouchableOpacity 
-          onPress = {() => Linking.openURL(this.props.restaurantDetail.photos_url)}
-        >
-          <View  style = {styles.resimageView}>
-            <Image source={{uri : this.props.restaurantDetail.thumb}} style = {styles.resimage}  resizeMethod='scale'/>
-          </View>
-        </TouchableOpacity >        
-
-        <View style = {styles.resHeadingView}>
-          <Text style = {styles.resHeading}>Address:</Text>
-          <Text>{this.props.restaurantDetail.location.address}</Text>
-        </View>
-
-        <View style = {styles.resLinkView}>
-          <Text style={styles.resLinkText}
-            onPress={() => Linking.openURL(this.props.restaurantDetail.events_url)}>
-              Other Link
-          </Text>
-        </View>
-
-        <View style = {styles.resLinkView}>
-          <Text style={styles.resLinkText}
-            onPress={() => Linking.openURL(this.props.restaurantDetail.menu_url)}>
-              Menu Link
-          </Text>
-        </View>
-
-        <View style = {styles.resHeadingView}>
-          <Text style = {styles.resHeading}>Reviews:</Text>
           <View>
-            <FlatList
-                data = {this.props.restaurantDetail.all_reviews.reviews}
-                renderItem = {({item,index}) => this.renderReviewRow(item,index)}
-                keyExtractor={(item, index) => index.toString()}
-              />   
-          </View>
-        </View>        
-      </View>        
+            <RestaurantDetail restaurantDetail = {this.props.restaurantDetail}/>
+            <RestaurantReviewList restaurantDetail = {this.props.restaurantDetail}/>              
+          </View>        
       </ScrollView>
       );
     }
-
     else{
       detailView = (
         <Spinner color="#255ca8" />

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux';
 import ZomatoActions from '../Redux/ZomatoRedux'
 // Styles
-import styles from './Styles/LaunchScreenStyles';
+// import styles from './Styles/LaunchScreenStyles';
 import {
   Container,
   Content,
@@ -13,12 +13,15 @@ import {
   Item,
   Picker
 } from "native-base";
-import {View, FlatList,Image,TouchableOpacity } from 'react-native';
+import {View } from 'react-native';
 
 //cityCodes
 import {cityCode_NewYork, cityCode_NewJersey} from '../Helper/CityCodes';
 
-class LaunchScreen extends Component {
+//import Components
+import LaunchScreenList from '../Components/LaunchScreenList';
+
+export class LaunchScreen extends Component {
   static navigationOptions = {
     title: 'Home'
   };
@@ -29,31 +32,6 @@ class LaunchScreen extends Component {
 
   componentDidMount(){
     this.props.getRestaurantCollection(this.props.cityId);
-  }
-
-  renderCategoryRow(item){
-    let collectionTitle = item.collection.title;
-    let id = item.collection.collection_id;
-    let bgImage = item.collection.image_url;
-
-    return(
-      <TouchableOpacity 
-        onPress={ () =>
-          this.props.navigation.navigate('SearchListScreen',
-          {
-            collectionId : id,
-            defaultCity : this.props.cityId
-          })}
-      >
-      <View key= {id} style = {styles.renderContainer}>
-        <Image source={{uri : bgImage}} style = {styles.bgimage} blurRadius={2.5} opacity={7} resizeMethod='scale'/>
-
-        <View style = {styles.absoluteView}>
-        <Text style={styles.bgText}>{collectionTitle}</Text>
-        </View>
-      </View>
-      </TouchableOpacity >
-    )
   }
 
   changeCity(text){
@@ -68,11 +46,7 @@ class LaunchScreen extends Component {
         <View >
           {
             this.props.collections.length > 0 ? (
-              <FlatList
-              data = {this.props.collections}
-              renderItem = {({item}) => this.renderCategoryRow(item)}
-              keyExtractor={(item, index) => index.toString()}
-            />
+            <LaunchScreenList collections = {this.props.collections}/>
             ):(
               <View>
                 <Text>No data Found</Text>

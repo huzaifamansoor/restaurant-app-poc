@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {View, FlatList,Image,TouchableOpacity  } from 'react-native'
+import {View } from 'react-native'
 import { connect } from 'react-redux';
 
 import styles from './Styles/SearchListScreenStyle';
@@ -15,8 +15,10 @@ import {
 
 import ZomatoActions from '../Redux/ZomatoRedux';
 
+//import Components
+import SearchScreenList from '../Components/SearchScreenList';
 
-class SearchListScreen extends Component {
+export class SearchListScreen extends Component {
   static navigationOptions = {
     title: 'Search Restaurant'
   };
@@ -42,58 +44,20 @@ class SearchListScreen extends Component {
     }
   }
 
-  renderSearchResultRow(item){
-    const resId = item.restaurant.id;
-    const bgImage = item.restaurant.featured_image;
-    const resturantName = item.restaurant.name;
-    const cost = item.restaurant.average_cost_for_two;
-    const rating = item.restaurant.user_rating.aggregate_rating;
-
-    return(
-    <TouchableOpacity 
-      style = {styles.searchRow}
-      onPress={ () =>
-        this.props.navigation.navigate('RestaurantdetailScreen',
-        {
-          resId : resId,
-        })}
-    >
-      <View style = {styles.flexRow}>
-        
-        <View style = {styles.imageView}>
-          <Image source={{uri : bgImage}} style = {styles.resImage} resizeMethod='scale'/>
-        </View>
-        
-        <View style ={styles.detailsView}>
-          <Text style={styles.resName}>{resturantName}</Text>
-          <Text style={styles.resRating}>Rating: {rating}</Text>
-          <Text style={styles.resCost}>Cost: {cost}</Text>
-        </View>
-      </View>
-    </TouchableOpacity >
-    );
-  }
-
-  renderSeparator = () => {
-    return (
-      <View
-        style={styles.rowSeprator}
-      />
-    );
-  };
-
   render () { 
-    console.log(this.props)
     var searchList;
     if(this.props.searchResultLoaded){
       searchList = (
         <View >
-            <FlatList
-              data = {this.props.searchResult}
-              renderItem = {({item}) => this.renderSearchResultRow(item)}
-              ItemSeparatorComponent={this.renderSeparator}
-              keyExtractor={(item, index) => index.toString()}
-            />            
+          {
+            this.props.searchResult.length > 0 ? (
+            <SearchScreenList searchResult ={this.props.searchResult}/> 
+            ):(
+              <View style = {styles.noRecordFound}>
+                <Text>No record found</Text>
+              </View>
+            )
+          }                   
         </View>
        );
     }

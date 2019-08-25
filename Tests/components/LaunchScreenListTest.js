@@ -1,12 +1,12 @@
 import 'react-native';
 import React from 'react';
 
-import RestaurantdetailScreen from '../../App/Containers/RestaurantdetailScreen';
+import { LaunchScreenList  } from '../../App/Components/LaunchScreenList';
 import renderer from 'react-test-renderer';
 
-test('RestaurantdetailScreen Snapshot' , () => {
+test('LaunchScreenList Snapshot' , () => {
     const snap = renderer.create(
-        <RestaurantdetailScreen/>
+        <LaunchScreenList/>
     ).toJSON();
 
     expect(snap).toMatchSnapshot();    
