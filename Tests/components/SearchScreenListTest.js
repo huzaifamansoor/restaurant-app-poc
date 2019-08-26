@@ -45,5 +45,5 @@ const searchResult  = [
 test('SearchScreenList Snapshot' , () => {
     const snap = shallow(<SearchScreenList searchResult={searchResult} />);
 
-    expect(snap).toMatchSnapshot();    
+    expect(snap.debug()).toMatchSnapshot();    
 });

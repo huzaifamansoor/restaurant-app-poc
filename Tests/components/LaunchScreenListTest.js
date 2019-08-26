@@ -54,5 +54,5 @@ const collections = [
 test('LaunchScreenList Snapshot' , () => {
     const snap = shallow(<LaunchScreenList collections={collections} />);
 
-    expect(snap).toMatchSnapshot();    
+    expect(snap.debug()).toMatchSnapshot();    
 });

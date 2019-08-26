@@ -27,5 +27,5 @@ const restaurantDetail= {
 test('RestaurantDetail Snapshot' , () => {
     const snap = shallow(<RestaurantDetail restaurantDetail={restaurantDetail} />);
 
-    expect(snap).toMatchSnapshot();   
+    expect(snap.debug()).toMatchSnapshot();   
 });
