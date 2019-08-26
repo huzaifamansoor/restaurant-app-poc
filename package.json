@@ -106,7 +106,11 @@
     },
     "setupFiles": [
       "<rootDir>/Tests/Setup"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!native-base)/"
     ]
+    
   },
   "config": {},
   "standard": {
