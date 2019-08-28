@@ -26,6 +26,8 @@
   "dependencies": {
     "apisauce": "^1.0.2",
     "axios": "^0.19.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "format-json": "^1.0.3",
     "identity-obj-proxy": "^3.0.0",
     "lodash": "^4.17.11",
@@ -49,6 +51,7 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "5.10.0",
     "redux-saga": "^1.0.5",
+    "redux-saga-tester": "^1.0.534",
     "reduxsauce": "1.0.1",
     "seamless-immutable": "^7.1.4"
   },
@@ -110,7 +113,6 @@
     "transformIgnorePatterns": [
       "/node_modules/(?!native-base)/"
     ]
-    
   },
   "config": {},
   "standard": {

@@ -5,14 +5,14 @@ import Immutable from 'seamless-immutable'
 
 const { Types, Creators } = createActions({
   //Launch Screen Actions
-  getCollection : null,
+  getCollection : ['cityId'],
   setCollectionId : ['collectionId'],
   setRestaurantId : ['restaurantId'],
   setCityId : ['cityId'],
-  getRestaurantDetail : null,
+  getRestaurantDetail : ['restaurantId'],
   setSearchKeyword : ['searchKeyword'],
-  searchWithParams : ['searchResult'],
-  searchWithoutParams : null,
+  searchWithParams : ['collectionId','searchKeyword'],
+  searchWithoutParams : ['collectionId'],
   getSearchWithParams : ['searchResult'],
   getSearchWithoutParams : ['searchResult'],
   setCollection : ['collections'],
@@ -36,7 +36,7 @@ export const INITIAL_STATE = Immutable({
   searchKeyword : '',
 
   //RestaurantDetail Screen
-  restaurantId : '1080',
+  restaurantId : '19133827',
   restaurantDetail : null,
   restaurantIsLoaded : false
 })
