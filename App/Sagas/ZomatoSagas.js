@@ -4,8 +4,8 @@ import {ZomatoSelectors} from '../Redux/ZomatoRedux';
 
 //get restaurant collection from zomato API using apisauce
 export function * getCollectionSaga(api,action) {
-  const data = yield select(ZomatoSelectors.getData) 
-  const city_id = data.cityId  // read city Id from payload
+ 
+  const city_id = action.cityId;
   const response = yield call(api.getResCollection, city_id); // call Zomato API
   
   //If response is OK then update respective fields to set state.
@@ -19,9 +19,10 @@ export function * getCollectionSaga(api,action) {
 
 //get restaurant collection from zomato API using apisauce
 export function * searchWithParamsSaga(api,action){
-  const data = yield select(ZomatoSelectors.getData) //read search params from state
-  const searchKeyword = data.searchKeyword;
-  const collection_id = data.collectionId; //read collection_id from state
+  const searchKeyword = action.searchKeyword;
+  const collection_id = action.collectionId; //read collection_id from state
+
+  console.log(action)
   const response = yield call(api.getSearchListWithQueryParam,{
       collection_id : collection_id,q :searchKeyword
     });
@@ -34,14 +35,14 @@ export function * searchWithParamsSaga(api,action){
 
 //Search Restaurant Without Params
 export function * searchWithoutParamsSaga(api,action){
-  const data = yield select(ZomatoSelectors.getData) //read collection_id from state
-  const collection_id = data.collectionId; //read collection_id from state
+  
+  const collection_id = action.collectionId;
   const response = yield call(api.getSearchListWithOutQueryParam,{
       collection_id : collection_id
     });
   
   if (response.ok) {    
-    let data =  response.data;    
+    let data =  response.data;  
     data.searchResultLoaded = true;
     yield put(ZomatoActions.getSearchWithoutParams(data));
   }
@@ -49,9 +50,7 @@ export function * searchWithoutParamsSaga(api,action){
 
 //get restaurant detail for specific restaurant Id
 export function * getResDetailsSaga(api,action){
-  const data = yield select(ZomatoSelectors.getData);
-  const restaurant_id = data.restaurantId;
-
+  const restaurant_id = action.restaurantId;
   const response = yield call(api.getResDetail, restaurant_id);
   if (response.ok) {
     let data =  response.data;    

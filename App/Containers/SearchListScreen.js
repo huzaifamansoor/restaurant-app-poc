@@ -29,18 +29,18 @@ export class SearchListScreen extends Component {
     const { navigation } = this.props;   
     this.props.setCollectionId(navigation.getParam('collectionId', '1'));
     this.props.setSearchKeyword('');
-    this.props.searchWithoutParams();
+    this.props.searchWithoutParams(this.props.collectionId);
   }
 
-  onChangeKeyword(text){
-    if(text.length > 2){
-      this.props.setSearchKeyword(text);        
-      this.props.searchWithParams(text);
+  onChangeKeyword(searchKeyword){
+    if(searchKeyword.length > 2){
+      this.props.setSearchKeyword(searchKeyword);        
+      this.props.searchWithParams(this.props.collectionId,searchKeyword);
       
     }
-    else if(text.length === 0){
+    else if(searchKeyword.length === 0){
       this.props.setSearchKeyword('');
-      this.props.searchWithoutParams();
+      this.props.searchWithoutParams(this.props.collectionId);
     }
   }
 
@@ -89,8 +89,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setCollectionId: (collectionId) => dispatch(ZomatoActions.setCollectionId(collectionId)),
     setSearchKeyword : (searchKeyword) =>  dispatch(ZomatoActions.setSearchKeyword(searchKeyword)),
-    searchWithParams : (searchResult) => dispatch(ZomatoActions.searchWithParams(searchResult)),
-    searchWithoutParams : () => dispatch(ZomatoActions.searchWithoutParams()),
+    searchWithParams : (collectionId,searchKeyword) => dispatch(ZomatoActions.searchWithParams(collectionId,searchKeyword)),
+    searchWithoutParams : (collectionId) => dispatch(ZomatoActions.searchWithoutParams(collectionId)),
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(SearchListScreen)

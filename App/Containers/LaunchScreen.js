@@ -34,9 +34,9 @@ export class LaunchScreen extends Component {
     this.props.getRestaurantCollection(this.props.cityId);
   }
 
-  changeCity(text){
-    this.props.setCityId(text);
-    this.props.getRestaurantCollection();
+  changeCity(cityId){
+    this.props.setCityId(cityId);
+    this.props.getRestaurantCollection(cityId);
   }
 
   render() {
