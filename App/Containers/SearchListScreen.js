@@ -50,13 +50,7 @@ export class SearchListScreen extends Component {
       searchList = (
         <View >
           {
-            this.props.searchResult.length > 0 ? (
             <SearchScreenList searchResult ={this.props.searchResult}/> 
-            ):(
-              <View style = {styles.noRecordFound}>
-                <Text>No record found</Text>
-              </View>
-            )
           }                   
         </View>
        );
