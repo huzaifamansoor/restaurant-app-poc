@@ -49,9 +49,7 @@ export class SearchListScreen extends Component {
     if(this.props.searchResultLoaded){
       searchList = (
         <View >
-          {
-            <SearchScreenList searchResult ={this.props.searchResult}/> 
-          }                   
+            <SearchScreenList searchResult ={this.props.searchResult}/>                
         </View>
        );
     }
